@@ -27,7 +27,7 @@ $(TARGET): $(OBJS)
 all: $(TARGET)
 
 clear:
-	rm $(OBJ_DIR)/* $(BIN_DIR)/*
+	rm $(OBJ_DIR)/* $(BIN_DIR)/tp2.out
 
 run: $(TARGET)
 	clear

@@ -11,7 +11,7 @@ class GrafoLA {
         GrafoLA(int numVertices);
         void adicionarAresta(int origem, int destino, double peso);
         void imprimirGrafo();
-        double Dijkstra(int origem, int destino);
+        double Dijkstra(int origem, int destino, int limitePortais);
     private:
         int numVertices;
         Lista* listaAdj;

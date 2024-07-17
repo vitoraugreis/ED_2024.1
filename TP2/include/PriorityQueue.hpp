@@ -4,16 +4,17 @@
 class pqNode {
     public:
         pqNode();
-        pqNode(int vertice, double peso);
+        pqNode(int vertice, double peso, int portais);
         int vertice;
         double peso;
+        int portaisUsados;
 };
 
 class PriorityQueue {
     public:
         PriorityQueue(int maxsize);
         ~PriorityQueue();
-        void Inserir(int x, double peso);
+        void Inserir(int vertice, double peso, int portais);
         void Remover();
         pqNode* Topo();
         bool Vazio();

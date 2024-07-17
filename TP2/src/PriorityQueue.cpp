@@ -5,9 +5,10 @@ pqNode::pqNode() {
     this->vertice = -1;
 }
 
-pqNode::pqNode(int vertice, double peso) {
+pqNode::pqNode(int vertice, double peso, int portais) {
     this->vertice = vertice;
     this->peso = peso;
+    this->portaisUsados = portais;
 }
 
 PriorityQueue::PriorityQueue(int maxsize) {
@@ -17,8 +18,8 @@ PriorityQueue::PriorityQueue(int maxsize) {
 
 PriorityQueue::~PriorityQueue() { delete this->data; }
 
-void PriorityQueue::Inserir(int vertice, double peso) {
-    pqNode novo = pqNode(vertice, peso);
+void PriorityQueue::Inserir(int vertice, double peso, int portais) {
+    pqNode novo = pqNode(vertice, peso, portais);
     this->data[this->tamanho] = novo;
     if (!this->Vazio()) {
         int indice = this->tamanho;

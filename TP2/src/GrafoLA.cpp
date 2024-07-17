@@ -17,34 +17,45 @@ void GrafoLA::imprimirGrafo() {
     }
 }
 
-double GrafoLA::Dijkstra(int origem, int destino) {
-    int V = this->numVertices; 
-    double dist[V];
+double GrafoLA::Dijkstra(int origem, int destino, int limitePortais) {
+    int V = this->numVertices;
+    double dist[V][limitePortais+1];        // Matriz com os vertices e a distância mínima percorrida de acordo com o número de portais usados.
     PriorityQueue pq = PriorityQueue(V);
 
     for (int i = 0; i<V; i++) {
-        dist[i] = INF;
+        for (int j = 0; j<=limitePortais; j++) {
+            dist[i][j] = INF;               // Inicia todas as distâncias mínimas como "Infinito".
+        }
     }
 
-    dist[origem] = 0;
-    pq.Inserir(origem, 0);
+    dist[origem][0] = 0;
+    pq.Inserir(origem, 0, 0);
 
     while (!pq.Vazio()) {
-        pqNode* p = pq.Topo();
-        int u = p->vertice;
-        double d = p->peso;
-        pq.Remover();
+        pqNode* node = pq.Topo();           // Recupera o topo da lista de prioridade (Menor valor de peso)
+        int id = node->vertice;          
+        double distancia = node->peso;
+        int portais = node->portaisUsados;
+        pq.Remover();                       // Remove o nó da lista de prioridade.
 
-        if (d > dist[u]) { continue; }
-        
-        dist[u] = d;
-        for (No* j = this->listaAdj[u].head; j != nullptr; j = j->prox) {
-            double w = d + j->peso;
-            if (dist[j->destino] > w) {
-                pq.Inserir(j->destino, w);
+        if (distancia > dist[id][portais]) { continue; }
+
+        dist[id][portais] = distancia;
+        for (No* j = this->listaAdj[id].head; j != nullptr; j = j->prox) {
+            double w = distancia + j->peso;
+            if (j->peso == 0 && portais < limitePortais) {          // Se a aresta tem peso 0 e o número de portais usados é menor doque o limite permitido.
+                if (w < dist[j->destino][portais+1]) {
+                    pq.Inserir(j->destino, w, portais+1);
+                }
+            } else if (w < dist[j->destino][portais]) {
+                pq.Inserir(j->destino, w, portais);
             }
         }
     }
-    return dist[destino];
+
+    double min = INF;
+    for (int i = 0; i<=limitePortais; i++) {
+        if (dist[destino][i] < min) { min = dist[destino][i]; }
+    }
+    return min;
 }
-    
