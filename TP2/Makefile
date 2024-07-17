@@ -12,12 +12,10 @@ CFLAGS = -std=c++17 -Wall -I$(INC_DIR)
 
 # Arquivo final
 TARGET = $(BIN_DIR)/tp2.out
-
-# Cabeçalhos
-HDRS = $(INC_DIR)/Lista.hpp $(INC_DIR)/GrafoLA.hpp
+INPUT = $(BIN_DIR)/input.txt
 
 # Objetos para compilação
-OBJS = $(OBJ_DIR)/Lista.o $(OBJ_DIR)/GrafoLA.o $(OBJ_DIR)/tp2.o
+OBJS = $(OBJ_DIR)/Lista.o $(OBJ_DIR)/GrafoLA.o $(OBJ_DIR)/Vertice.o $(OBJ_DIR)/tp2.o
 
 ## REGRAS DE COMPILAÇÃO
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp
@@ -27,3 +25,10 @@ $(TARGET): $(OBJS)
 	$(CC) $(CFLAGS) -o $(TARGET) $(OBJS)
 
 all: $(TARGET)
+
+clear:
+	rm $(OBJ_DIR)/* $(BIN_DIR)/*
+
+run: $(TARGET)
+	clear
+	./$(TARGET) < $(INPUT)

@@ -1,33 +1,33 @@
 #include "GrafoLA.hpp"
-#include <iostream>
-
-using namespace std;
+#include "Vertice.hpp"
 
 int main() {
     int totalVertices, totalArestas, totalPortais;
-    cin >> totalVertices >> totalArestas >> totalPortais;
+    std::cin >> totalVertices >> totalArestas >> totalPortais;
 
-    Grafo grafo = Grafo(totalVertices, totalArestas+totalPortais);
+    GrafoLA grafo = GrafoLA(totalVertices);
+    Vertice* vertices = new Vertice[totalVertices];
 
     for (int i = 0; i<totalVertices; i++) {
         int x, y; 
-        cin >> x >> y;
-        grafo.AtualizaVertice(i, x, y);
+        std::cin >> x >> y;
+        vertices[i].setCoord(x, y);
     }
 
     for (int i = 0; i<totalArestas; i++) {
         int v1, v2;
-        cin >> v1 >> v2;
-        grafo.InsereAresta(v1, v2);
+        std::cin >> v1 >> v2;
+        double peso = vertices[v1].CalcularDistancia(&vertices[v2]);
+        grafo.adicionarAresta(v1, v2, peso);
     }
 
     for (int i = 0; i<totalPortais; i++) {
         int v1, v2;
-        cin >> v1 >> v2;
-        grafo.InsereArestaSemPeso(v1, v2);
+        std::cin >> v1 >> v2;
+        grafo.adicionarAresta(v1, v2, 0);
     }
 
     int energia, limUsoPortais;
-    cin >> energia >> limUsoPortais; // energia e a quantidade de portais que Linque pode usar.
-    grafo.ImprimeGrafo();
+    std::cin >> energia >> limUsoPortais; // energia e a quantidade de portais que Linque pode usar.
+    grafo.imprimirGrafo();
 }
