@@ -12,6 +12,7 @@ class No {
         No* prox;
     
     friend class Lista;
+    friend class GrafoLA;
 };
 
 class Lista {
@@ -21,6 +22,8 @@ class Lista {
         void imprimirLista();
     private:
         No* head;
+    
+    friend class GrafoLA;
 };
 
 #endif

@@ -30,4 +30,9 @@ int main() {
     int energia, limUsoPortais;
     std::cin >> energia >> limUsoPortais; // energia e a quantidade de portais que Linque pode usar.
     grafo.imprimirGrafo();
+    std::cout << grafo.Dijkstra(0, 0) << std::endl;
+    std::cout << grafo.Dijkstra(0, 1) << std::endl;
+    std::cout << grafo.Dijkstra(0, 2) << std::endl;
+    std::cout << grafo.Dijkstra(0, 3) << std::endl;
+    std::cout << grafo.Dijkstra(0, 4) << std::endl;
 }
