@@ -58,9 +58,12 @@ double GrafoMA::Dijkstra(int origem, int destino, int limitePortais) {
         dist[id][portais] = distancia;
         for (int j = 0; j<V; j++) {
             double pesoVizinho = this->matrizAdj[id][j];
+
             if (pesoVizinho == INF) { continue; }
+            if (pesoVizinho == 0 && portais >= limitePortais) { continue; }
+
             double w = distancia + pesoVizinho;
-            if ( pesoVizinho == 0 && portais < limitePortais) {          // Se a aresta tem peso 0 e o número de portais usados é menor doque o limite permitido.
+            if ( pesoVizinho == 0) {          // Se a aresta tem peso 0 e o número de portais usados é menor doque o limite permitido.
                 if (w < dist[j][portais+1]) {
                     pq.Inserir(j, w, portais+1);
                 }

@@ -32,7 +32,6 @@ double GrafoLA::Dijkstra(int origem, int destino, int limitePortais) {
     pq.Inserir(origem, 0, 0);
 
     while (!pq.Vazio()) {
-        //pq.ImprimirTopo();
         pqNode* node = pq.Topo();           // Recupera o topo da lista de prioridade (Menor valor de peso)
         int id = node->vertice;          
         double distancia = node->peso;
@@ -43,8 +42,11 @@ double GrafoLA::Dijkstra(int origem, int destino, int limitePortais) {
 
         dist[id][portais] = distancia;
         for (No* j = this->listaAdj[id].head; j != nullptr; j = j->prox) {
+            
+            if (j->peso == 0 && portais >= limitePortais) { continue; }
+
             double w = distancia + j->peso;
-            if (j->peso == 0 && portais < limitePortais) {          // Se a aresta tem peso 0 e o número de portais usados é menor doque o limite permitido.
+            if (j->peso == 0) {                         // Se a aresta tem peso 0 e o número de portais usados é menor doque o limite permitido.
                 if (w < dist[j->destino][portais+1]) {
                     pq.Inserir(j->destino, w, portais+1);
                 }
@@ -55,12 +57,6 @@ double GrafoLA::Dijkstra(int origem, int destino, int limitePortais) {
     }
 
     double min = INF;
-    for (int i = 0; i<V; i++) {
-        for (int j = 0; j<=limitePortais; j++) {
-            std::cout << dist[i][j] << '\t';
-        }
-        std::cout << std::endl;
-    }
     for (int i = 0; i<=limitePortais; i++) {
         if (dist[destino][i] < min) { min = dist[destino][i]; }
     }
