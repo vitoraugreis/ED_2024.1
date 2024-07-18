@@ -1,23 +1,38 @@
-#include "GrafoLA.hpp"
+#include "GrafoMA.hpp"
 
-GrafoLA::GrafoLA(int numVertices) {
+GrafoMA::GrafoMA(int numVertices) {
     this->numVertices = numVertices;
-    this->listaAdj = new Lista[numVertices];
+    this->matrizAdj = new double*[numVertices];
+
+    for (int i = 0; i<numVertices; i++) {
+        this->matrizAdj[i] = new double[numVertices];
+        for (int j = 0; j<numVertices; j++) {
+           this->matrizAdj[i][j] = INF;
+        }
+    }
 }
 
-void GrafoLA::adicionarAresta(int origme, int destino, double peso) {
-    listaAdj[origme].adicionarAresta(destino, peso);
+GrafoMA::~GrafoMA() {
+    for (int i = 0; i<numVertices; i++) {
+        delete[] this->matrizAdj[i];
+    }
+    delete[] this->matrizAdj;
 }
 
-void GrafoLA::imprimirGrafo() {
-    for (int i = 0; i < numVertices; ++i) {
-        std::cout << "Vértice " << i << ":";
-        listaAdj[i].imprimirLista();
+void GrafoMA::adicionarAresta(int origem, int destino, double peso) {
+    this->matrizAdj[origem][destino] = peso;
+}
+
+void GrafoMA::imprimirGrafo() {
+    for (int i = 0; i<numVertices; i++) {
+        for (int j = 0; j<numVertices; j++) {
+            std::cout << this->matrizAdj[i][j] << '\t';
+        }
         std::cout << std::endl;
     }
 }
 
-double GrafoLA::Dijkstra(int origem, int destino, int limitePortais) {
+double GrafoMA::Dijkstra(int origem, int destino, int limitePortais) {
     int V = this->numVertices;
     double dist[V][limitePortais+1];        // Matriz com os vertices e a distância mínima percorrida de acordo com o número de portais usados.
     PriorityQueue pq = PriorityQueue(V);
@@ -32,7 +47,6 @@ double GrafoLA::Dijkstra(int origem, int destino, int limitePortais) {
     pq.Inserir(origem, 0, 0);
 
     while (!pq.Vazio()) {
-        //pq.ImprimirTopo();
         pqNode* node = pq.Topo();           // Recupera o topo da lista de prioridade (Menor valor de peso)
         int id = node->vertice;          
         double distancia = node->peso;
@@ -42,32 +56,28 @@ double GrafoLA::Dijkstra(int origem, int destino, int limitePortais) {
         if (distancia > dist[id][portais]) { continue; }
 
         dist[id][portais] = distancia;
-        for (No* j = this->listaAdj[id].head; j != nullptr; j = j->prox) {
-            double w = distancia + j->peso;
-            if (j->peso == 0 && portais < limitePortais) {          // Se a aresta tem peso 0 e o número de portais usados é menor doque o limite permitido.
-                if (w < dist[j->destino][portais+1]) {
-                    pq.Inserir(j->destino, w, portais+1);
+        for (int j = 0; j<V; j++) {
+            double pesoVizinho = this->matrizAdj[id][j];
+            if (pesoVizinho == INF) { continue; }
+            double w = distancia + pesoVizinho;
+            if ( pesoVizinho == 0 && portais < limitePortais) {          // Se a aresta tem peso 0 e o número de portais usados é menor doque o limite permitido.
+                if (w < dist[j][portais+1]) {
+                    pq.Inserir(j, w, portais+1);
                 }
-            } else if (w < dist[j->destino][portais]) {
-                pq.Inserir(j->destino, w, portais);
+            } else if (w < dist[j][portais]) {
+                pq.Inserir(j, w, portais);
             }
         }
     }
 
     double min = INF;
-    for (int i = 0; i<V; i++) {
-        for (int j = 0; j<=limitePortais; j++) {
-            std::cout << dist[i][j] << '\t';
-        }
-        std::cout << std::endl;
-    }
     for (int i = 0; i<=limitePortais; i++) {
         if (dist[destino][i] < min) { min = dist[destino][i]; }
     }
     return min;
 }
 
-double GrafoLA::AStar(int origem, int destino, Vertice* vertices, int limitePortais) {
+double GrafoMA::AStar(int origem, int destino, Vertice* vertices, int limitePortais) {
     int V = this->numVertices;
     bool vizitados[V][limitePortais+1];
 
@@ -92,17 +102,17 @@ double GrafoLA::AStar(int origem, int destino, Vertice* vertices, int limitePort
 
         vizitados[id][portaisUsados] = true;
         
-        for (No* j = this->listaAdj[id].head; j != nullptr; j = j->prox) {
-            int idVizinho = j->destino;
-            double pesoVizinho = j->peso;
+        for (int j = 0; j<V; j++) {
+            double pesoVizinho = this->matrizAdj[id][j];
 
+            if (pesoVizinho == INF) { continue; }
             if (pesoVizinho == 0) { portaisUsados++; }
             if (portaisUsados > limitePortais) { continue; }
-            if (vizitados[idVizinho][portaisUsados]) { continue; }
+            if (vizitados[j][portaisUsados]) { continue; }
 
             double distPercorridaAtual = distancia + pesoVizinho;
-            double heuristica = vertices[idVizinho].CalcularDistancia(&vertices[destino]);
-            pq.Inserir(idVizinho, distPercorridaAtual, heuristica, portaisUsados);
+            double heuristica = vertices[j].CalcularDistancia(&vertices[destino]);
+            pq.Inserir(j, distPercorridaAtual, heuristica, portaisUsados);
         }
     }
     return INF;          // Retorna INF caso não encontrar o caminho.

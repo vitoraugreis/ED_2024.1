@@ -87,3 +87,8 @@ int PriorityQueue::GetSucessorDir(int posicao) {
     if (sucDir >= this->tamanho) { return posicao; }
     else { return sucDir; }
 }
+
+void PriorityQueue::ImprimirTopo() {
+    pqNode* no = this->Topo();
+    std::cout << no->vertice << ' ' << no->peso << ' ' << no->portaisUsados << std::endl;
+}

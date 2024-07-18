@@ -1,4 +1,5 @@
 #include "GrafoLA.hpp"
+#include "GrafoMA.hpp"
 #include "Vertice.hpp"
 
 int main() {

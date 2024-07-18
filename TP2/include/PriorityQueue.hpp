@@ -1,6 +1,8 @@
 #ifndef PRIORITYQUEUE_HPP
 #define PRIORITYQUEUE_HPP
 
+#include <iostream>
+
 class pqNode {
     public:
         pqNode();
@@ -18,6 +20,7 @@ class PriorityQueue {
         void Remover();
         pqNode* Topo();
         bool Vazio();
+        void ImprimirTopo();
 
     private:
         int GetAncestral(int posicao);
