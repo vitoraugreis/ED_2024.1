@@ -38,11 +38,12 @@ double GrafoLA::Dijkstra(int origem, int destino, int limitePortais) {
         int portais = node->portaisUsados;
         pq.Remover();                       // Remove o nó da lista de prioridade.
 
+        if (id == destino) { return distancia; }
         if (distancia > dist[id][portais]) { continue; }
 
         dist[id][portais] = distancia;
         for (No* j = this->listaAdj[id].head; j != nullptr; j = j->prox) {
-            
+
             if (j->peso == 0 && portais >= limitePortais) { continue; }
 
             double w = distancia + j->peso;
@@ -55,12 +56,7 @@ double GrafoLA::Dijkstra(int origem, int destino, int limitePortais) {
             }
         }
     }
-
-    double min = INF;
-    for (int i = 0; i<=limitePortais; i++) {
-        if (dist[destino][i] < min) { min = dist[destino][i]; }
-    }
-    return min;
+    return INF;
 }
 
 double GrafoLA::AStar(int origem, int destino, Vertice* vertices, int limitePortais) {

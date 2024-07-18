@@ -3,7 +3,7 @@
 AStarpqNode::AStarpqNode() {
     this->distPercorrida = -1;
     this->heuristica = -1;
-    this->peso = -1;
+    this->estimativa = -1;
     this->portaisUsados = -1;
     this->vertice = -1;
 }
@@ -12,7 +12,7 @@ AStarpqNode::AStarpqNode(int vertice, double distPercorrida, double heuristica, 
     this->vertice = vertice;
     this->distPercorrida = distPercorrida;
     this->heuristica = heuristica;
-    this->peso = distPercorrida + heuristica;
+    this->estimativa = distPercorrida + heuristica;
     this->portaisUsados = portais;
 }
 
@@ -30,7 +30,7 @@ void AStarPriorityQueue::Inserir(int vertice, double distPercorrida, double heur
         int indice = this->tamanho;
         int pai = this->GetAncestral(indice);
         
-        while (this->data[indice].peso < this->data[pai].peso) {
+        while (this->data[indice].estimativa < this->data[pai].estimativa) {
             AStarpqNode aux = this->data[pai];
             this->data[pai] = this->data[indice];
             this->data[indice] = aux;
@@ -52,10 +52,10 @@ void AStarPriorityQueue::Remover() {
     int sucEsq = this->GetSucessorEsq(indice);
     int sucDir = this->GetSucessorDir(indice);
     int menorSucessor;
-    if (this->data[sucEsq].peso <= this->data[sucDir].peso) { menorSucessor = sucEsq; }
+    if (this->data[sucEsq].estimativa <= this->data[sucDir].estimativa) { menorSucessor = sucEsq; }
     else { menorSucessor = sucDir; }
 
-    while (this->data[indice].peso > this->data[menorSucessor].peso) {
+    while (this->data[indice].estimativa > this->data[menorSucessor].estimativa) {
         AStarpqNode aux = this->data[menorSucessor];
         this->data[menorSucessor] = this->data[indice];
         this->data[indice] = aux;
@@ -63,7 +63,7 @@ void AStarPriorityQueue::Remover() {
         indice = menorSucessor;
         sucEsq = this->GetSucessorEsq(indice);
         sucDir = this->GetSucessorDir(indice);
-        if (this->data[sucEsq].peso <= this->data[sucDir].peso) { menorSucessor = sucEsq; }
+        if (this->data[sucEsq].estimativa <= this->data[sucDir].estimativa) { menorSucessor = sucEsq; }
         else { menorSucessor = sucDir; }
     }
 }
@@ -95,5 +95,5 @@ int AStarPriorityQueue::GetSucessorDir(int posicao) {
 
 void AStarPriorityQueue::ImprimirTopo() {
     AStarpqNode* no = this->Topo();
-    std::cout << no->vertice << ' ' << no->distPercorrida << ' ' << no->heuristica << ' ' << no->peso << ' ' << no->portaisUsados << std::endl;
+    std::cout << no->vertice << ' ' << no->distPercorrida << ' ' << no->heuristica << ' ' << no->estimativa << ' ' << no->portaisUsados << std::endl;
 }

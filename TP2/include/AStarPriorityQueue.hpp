@@ -3,17 +3,20 @@
 
 #include <iostream>
 
+// Classe utilizada para o bom funcionamento do algoritmo A*.
 class AStarpqNode {
     public:
-        AStarpqNode();
-        AStarpqNode(int vertice, double distPercorrida, double heuristica, int portais);
-        int vertice;
+        AStarpqNode();              // Construtor sem parâmetros. Utilizado para iniciar o minHeap.
+        AStarpqNode(int vertice, double distPercorrida, double heuristica, int portais);    // Construtor com parametros.
+        int vertice;                // Vértice atual.
         double distPercorrida;      // Distância já percorrida.
-        double heuristica;          // Heuristica: Distância entre os vértices no plano.
-        double peso;                // distPercorrida + heuristica. Vai ser usado para ordenar o heap.
+        double heuristica;          // Heuristica: Distância euclidiana entre o vértice atual e o vértice de destino.
+        double estimativa;          // distPercorrida + heuristica. Vai ser usado para ordenar o heap.
         int portaisUsados;          // Número de portais usados.
 };
 
+// minHeap para o algoritmo A*. Tem as mesmas funcionalidades que a usada para o Dijkstra.
+// A única diferença é que este minHeap será ordenado pela estimativa.
 class AStarPriorityQueue {
     public:
         AStarPriorityQueue(int maxsize);
