@@ -59,3 +59,44 @@ double GrafoLA::Dijkstra(int origem, int destino, int limitePortais) {
     }
     return min;
 }
+
+double GrafoLA::AStar(int origem, int destino, Vertice* vertices, int limitePortais) {
+    int V = this->numVertices;
+    bool vizitados[V][limitePortais+1];
+
+    for (int i = 0; i<V; i++) {
+        for (int j = 0; j<= limitePortais; j++) { 
+            vizitados[i][j] = false; 
+        }
+    }
+
+    AStarPriorityQueue pq = AStarPriorityQueue(V);
+    double heuristicaInicial = vertices[origem].CalcularDistancia(&vertices[destino]);
+    pq.Inserir(origem, 0, heuristicaInicial, 0);
+
+    while (!pq.Vazio()) {
+        AStarpqNode* node = pq.Topo();
+        int id = node->vertice;
+        int portaisUsados = node->portaisUsados;
+        double distancia = node->distPercorrida;
+        pq.Remover();
+
+        if (id == destino) { return distancia; }
+
+        vizitados[id][portaisUsados] = true;
+        
+        for (No* j = this->listaAdj[id].head; j != nullptr; j = j->prox) {
+            int idVizinho = j->destino;
+            double pesoVizinho = j->peso;
+
+            if (pesoVizinho == 0) { portaisUsados++; }
+            if (portaisUsados > limitePortais) { continue; }
+            if (vizitados[idVizinho][portaisUsados]) { continue; }
+
+            double distPercorridaAtual = distancia + pesoVizinho;
+            double heuristica = vertices[idVizinho].CalcularDistancia(&vertices[destino]);
+            pq.Inserir(idVizinho, distPercorridaAtual, heuristica, portaisUsados);
+        }
+    }
+    return INF;          // Retorna INF caso não encontrar o caminho.
+}

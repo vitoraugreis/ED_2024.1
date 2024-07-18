@@ -33,9 +33,15 @@ int main() {
 
     int energia, limUsoPortais;
     std::cin >> energia >> limUsoPortais; // Energia e a quantidade de portais que Linque pode usar.
-    //grafo.imprimirGrafo();
+    
     double menorCaminhoDijkstra = grafo.Dijkstra(0, totalVertices-1, limUsoPortais);
+    double menorCaminhoAStar = grafo.AStar(0, totalVertices-1, vertices, limUsoPortais);
 
-    if (energia <= menorCaminhoDijkstra) { std::cout << 1 << std::endl; }
-    else { std::cout << 0 << std::endl; }
+    if (energia < menorCaminhoDijkstra || menorCaminhoDijkstra == INF) { std::cout << 0 << ' '; }
+    else { std::cout << 1 << ' '; }
+
+    if (energia < menorCaminhoAStar || menorCaminhoAStar == INF) { std::cout << 0 << std::endl; }
+    else { std::cout << 1 << std::endl; }
+
+    return 0;
 }
