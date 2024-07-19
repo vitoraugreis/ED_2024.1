@@ -6,8 +6,8 @@
 class Vertice {
     public:
         Vertice();
-        void setCoord(int x, int y);
-        double CalcularDistancia(Vertice* v);
+        void setCoord(int x, int y);            // Atualiza as coordenadas do vértice.
+        double CalcularDistancia(Vertice* v);   // Calcula a distância euclidiana de dois vértices.
     private:
         int x, y;
 };

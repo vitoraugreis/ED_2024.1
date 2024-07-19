@@ -16,8 +16,8 @@ class GrafoLA {
         double Dijkstra(int origem, int destino, int limitePortais);
         double AStar(int origem, int destino, Vertice* vertices, int limitePortais);
     private:
-        int numVertices;
-        Lista* listaAdj;
+        int numVertices;        // Número de vértices do grafo.
+        Lista* listaAdj;        // Lista de adjacência do grafo.
 };
 
 #endif
