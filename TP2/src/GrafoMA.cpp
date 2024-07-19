@@ -10,7 +10,7 @@ GrafoMA::GrafoMA(int numVertices) {
         for (int j = 0; j<numVertices; j++) {
             // Inicia todas as posições da matriz com INF para informar que não existe aresta entre eles.
             // Não foi inicada com 0 para não causar confusões com os portais.
-           this->matrizAdj[i][j] = INF;
+            this->matrizAdj[i][j] = INF;
         }
     }
 }
