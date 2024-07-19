@@ -85,13 +85,13 @@ double GrafoMA::Dijkstra(int origem, int destino, int limitePortais) {
 // Algoritmo A*.
 double GrafoMA::AStar(int origem, int destino, Vertice* vertices, int limitePortais) {
     int V = this->numVertices;
-    bool vizitados[V][limitePortais+1]; // Matriz que representa o vértice e o número de portais usados até chegar a ele.
+    bool visitados[V][limitePortais+1]; // Matriz que representa o vértice e o número de portais usados até chegar a ele.
 
     for (int i = 0; i<V; i++) {
         for (int j = 0; j<= limitePortais; j++) { 
             // Inicia todas as posições da matriz como false.
             // Caso o vértice i seja alcançado usando j portais, a posição [i][j] é trocada para true.
-            vizitados[i][j] = false; 
+            visitados[i][j] = false; 
         }
     }
 
@@ -110,19 +110,25 @@ double GrafoMA::AStar(int origem, int destino, Vertice* vertices, int limitePort
 
         if (id == destino) { return distancia; }    // Acaba o algoritmo se o vértice de destino for retirado do minHeap.
 
-        vizitados[id][portaisUsados] = true;        // Atualiza a posição da matriz.
+        visitados[id][portaisUsados] = true;        // Atualiza a posição da matriz.
         
         for (int j = 0; j<V; j++) {                 // Percorre a matriz de adjacência para pegar todos os vizinhos do vértice atual.
             double pesoVizinho = this->matrizAdj[id][j];
 
             if (pesoVizinho == INF) { continue; }               // Se o valor na matriz for INF significa que não é vizinho.
-            if (pesoVizinho == 0) { portaisUsados++; }          // Aumenta o número de portais caso o peso da aresta para o vizinho seja 0.
-            if (portaisUsados > limitePortais) { continue; }    // Ignora o vértice caso passe o limite de portais que podem ser utilizados.
-            if (vizitados[j][portaisUsados]) { continue; }      // Ignora o vértice vizinho se ele já tiver sido visitado.
 
-            double distPercorridaAtual = distancia + pesoVizinho;                   // Calcula a distância percorrida até o vértice vizinho.
-            double heuristica = vertices[j].CalcularDistancia(&vertices[destino]);  // Calcula a heuristica.
-            pq.Inserir(j, distPercorridaAtual, heuristica, portaisUsados);          // Insere o vértice na fila de prioridade.
+            if (this->matrizAdj[id][j] == 0) {                                             // Verifica se a aresta é um portal
+                if (portaisUsados >= limitePortais) { continue; }           // Ignora o vértice caso passe o limite de portais que podem ser utilizados.
+                if (visitados[j][portaisUsados+1]) { continue; }            // Ignora o vértice vizinho se ele já tiver sido visitado.
+                double distPercorridaAtual = distancia + pesoVizinho;
+                double heuristica = vertices[j].CalcularDistancia(&vertices[destino]);
+                pq.Inserir(j, distPercorridaAtual, heuristica, portaisUsados+1);    // Como é um portal, o número de portais usados é incrementado.
+            } else {
+                if (visitados[j][portaisUsados]) { continue; }              // Ignora o vértice vizinho se ele já tiver sido visitado.
+                double distPercorridaAtual = distancia + pesoVizinho;
+                double heuristica = vertices[j].CalcularDistancia(&vertices[destino]);
+                pq.Inserir(j, distPercorridaAtual, heuristica, portaisUsados);
+            }
         }
     }
     return INF;          // Retorna INF caso não encontrar o caminho.

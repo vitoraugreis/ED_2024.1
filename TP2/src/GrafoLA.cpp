@@ -98,13 +98,18 @@ double GrafoLA::AStar(int origem, int destino, Vertice* vertices, int limitePort
             int idVizinho = j->destino;
             double pesoVizinho = j->peso;
 
-            if (pesoVizinho == 0) { portaisUsados++; }          // Aumenta o número de portais caso o peso da aresta para o vizinho seja 0.
-            if (portaisUsados > limitePortais) { continue; }    // Ignora o vértice caso passe o limite de portais que podem ser utilizados.
-            if (visitados[idVizinho][portaisUsados]) { continue; }  // Ignora o vértice vizinho se ele já tiver sido visitado.
-
-            double distPercorridaAtual = distancia + pesoVizinho;
-            double heuristica = vertices[idVizinho].CalcularDistancia(&vertices[destino]);
-            pq.Inserir(idVizinho, distPercorridaAtual, heuristica, portaisUsados);
+            if (j->peso == 0) {                                             // Verifica se a aresta é um portal
+                if (portaisUsados >= limitePortais) { continue; }           // Ignora o vértice caso passe o limite de portais que podem ser utilizados.
+                if (visitados[idVizinho][portaisUsados+1]) { continue; }    // Ignora o vértice vizinho se ele já tiver sido visitado.
+                double distPercorridaAtual = distancia + pesoVizinho;
+                double heuristica = vertices[idVizinho].CalcularDistancia(&vertices[destino]);
+                pq.Inserir(idVizinho, distPercorridaAtual, heuristica, portaisUsados+1);    // Como é um portal, o número de portais usados é incrementado.
+            } else {
+                if (visitados[idVizinho][portaisUsados]) { continue; }      // Ignora o vértice vizinho se ele já tiver sido visitado.
+                double distPercorridaAtual = distancia + pesoVizinho;
+                double heuristica = vertices[idVizinho].CalcularDistancia(&vertices[destino]);
+                pq.Inserir(idVizinho, distPercorridaAtual, heuristica, portaisUsados);
+            }
         }
     }
     return INF;          // Retorna INF caso não encontrar o caminho.
