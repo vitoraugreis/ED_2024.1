@@ -6,6 +6,7 @@
 class Vertice {
     public:
         Vertice();
+        ~Vertice();
         void setCoord(int x, int y);            // Atualiza as coordenadas do vértice.
         double CalcularDistancia(Vertice* v);   // Calcula a distância euclidiana de dois vértices.
     private:

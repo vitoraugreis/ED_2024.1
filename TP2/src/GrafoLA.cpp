@@ -6,6 +6,19 @@ GrafoLA::GrafoLA(int numVertices) {
     this->listaAdj = new Lista[numVertices];
 }
 
+// Destrutor do Grafo.
+GrafoLA::~GrafoLA() {
+    for (int i = 0; i < numVertices; ++i) {
+        No* atual = listaAdj[i].head;
+        while (atual != nullptr) {
+            No* prox = atual->prox;
+            delete atual;
+            atual = prox;
+        }
+    }
+    delete[] this->listaAdj;
+}
+
 // Adiciona aresta no grafo.
 void GrafoLA::adicionarAresta(int origme, int destino, double peso) {
     listaAdj[origme].adicionarAresta(destino, peso);

@@ -24,7 +24,7 @@ AStarPriorityQueue::AStarPriorityQueue(int maxsize) {
     this->data = new AStarpqNode[maxsize];
 }
 
-AStarPriorityQueue::~AStarPriorityQueue() { delete this->data; }
+AStarPriorityQueue::~AStarPriorityQueue() { delete[] this->data; }
 
 // Insere um novo nó no minHeap.
 void AStarPriorityQueue::Inserir(int vertice, double distPercorrida, double heuristica, int portais) {

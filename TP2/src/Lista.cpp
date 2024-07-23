@@ -7,6 +7,9 @@ No::No(int destino, double peso) {
     this->prox = nullptr;
 }
 
+// Destrutor da lista.
+Lista::~Lista() {}
+
 // Construtor da lista.
 Lista::Lista() {
     this->head = nullptr;

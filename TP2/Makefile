@@ -32,3 +32,7 @@ clear:
 run: $(TARGET)
 	clear
 	./$(TARGET) < $(INPUT)
+
+valgrind: $(TARGET)
+	clear
+	valgrind -s --leak-check=yes ./$(TARGET) 1 2

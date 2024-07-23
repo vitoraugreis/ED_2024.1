@@ -19,7 +19,8 @@ PriorityQueue::PriorityQueue(int maxsize) {
     this->data = new pqNode[maxsize];
 }
 
-PriorityQueue::~PriorityQueue() { delete this->data; }
+// Destrutor minHeap
+PriorityQueue::~PriorityQueue() { delete[] this->data; }
 
 void PriorityQueue::Inserir(int vertice, double peso, int portais) {
     pqNode novo = pqNode(vertice, peso, portais);   // Cria o nó

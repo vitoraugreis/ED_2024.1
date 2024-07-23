@@ -19,6 +19,7 @@ class No {
 class Lista {
     public:
         Lista();
+        ~Lista();
         void adicionarAresta(int destino, double peso);
         void imprimirLista();
     private:

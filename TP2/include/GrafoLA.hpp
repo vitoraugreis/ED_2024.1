@@ -11,6 +11,7 @@
 class GrafoLA {
     public:
         GrafoLA(int numVertices);
+        ~GrafoLA();
         void adicionarAresta(int origem, int destino, double peso);
         void imprimirGrafo();
         double Dijkstra(int origem, int destino, int limitePortais);

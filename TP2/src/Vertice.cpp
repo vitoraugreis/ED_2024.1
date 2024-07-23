@@ -12,6 +12,8 @@ void Vertice::setCoord(int x, int y) {
     this->y = y;
 }
 
+Vertice::~Vertice() {}
+
 // calcula a distância euclidiana entre dois vertices.
 double Vertice::CalcularDistancia(Vertice* v) {
     int Dx = this->x - v->x; Dx *= Dx;
