@@ -56,22 +56,21 @@ double GrafoLA::Dijkstra(int origem, int destino, int limitePortais) {
         pq.Remover();                 
 
         if (id == destino) { return distancia; }            // Se o vértice retirado for o de destino, o algoritmo para.
-        if (distancia > dist[id][portais]) { continue; }    // Se a distância encontrada para o vértice for maior que a encontrada anteriormente, ignore.
 
-        dist[id][portais] = distancia;
         for (No* j = this->listaAdj[id].head; j != nullptr; j = j->prox) {  // Percorre a lista na posição do vértice encontrado para encontrar seus vizinhos.
-
-            if (j->peso == 0 && portais >= limitePortais) { continue; }     // Ignora o vértice se ele for um portal e o limite de portais já for atingido.
-
             double w = distancia + j->peso;
+            int novoPortal = (j->peso == 0) ? portais+1 : portais;
+            if (novoPortal > limitePortais) { continue; }     // Ignora o vértice se ele for um portal e o limite de portais já for atingido.
+            
             // Insere o vértie vizinho na fila de prioridade, com a distância percorrida atualizada.
             // Se a aresta é um portal, haverá um acrescimo no número de portais utilizados.
-            if (j->peso == 0) {                             
-                if (w < dist[j->destino][portais+1]) {
-                    pq.Inserir(j->destino, w, portais+1);
+            if (dist[j->destino][novoPortal] > w) {
+                dist[j->destino][novoPortal] = w;
+                if (pq.posicoesVertices[j->destino] == -1) {
+                    pq.Inserir(j->destino, w, novoPortal);
+                } else {
+                    pq.atualizarChave(j->destino, w, novoPortal);
                 }
-            } else if (w < dist[j->destino][portais]) {
-                pq.Inserir(j->destino, w, portais);
             }
         }
     }
@@ -104,24 +103,23 @@ double GrafoLA::AStar(int origem, int destino, Vertice* vertices, int limitePort
         pq.Remover();
 
         if (id == destino) { return distancia; }    // Acaba o algoritmo se o vértice de destino for retirado do minHeap.
-
-        visitados[id][portaisUsados] = true;        // Atualiza a posição da matriz.
         
         for (No* j = this->listaAdj[id].head; j != nullptr; j = j->prox) {  // Percorre a lista de adjacência para pegar todos os vizinhos do vértice atual.
             int idVizinho = j->destino;
             double pesoVizinho = j->peso;
+            int novoPortal = (pesoVizinho == 0) ? portaisUsados+1 : portaisUsados;
+            if (novoPortal > limitePortais) { continue; } // Ignora o vértice caso passe o limite de portais que podem ser utilizados.
 
-            if (j->peso == 0) {                                             // Verifica se a aresta é um portal
-                if (portaisUsados >= limitePortais) { continue; }           // Ignora o vértice caso passe o limite de portais que podem ser utilizados.
-                if (visitados[idVizinho][portaisUsados+1]) { continue; }    // Ignora o vértice vizinho se ele já tiver sido visitado.
+            if (!visitados[idVizinho][novoPortal]) {
+                visitados[idVizinho][novoPortal] = true;
                 double distPercorridaAtual = distancia + pesoVizinho;
                 double heuristica = vertices[idVizinho].CalcularDistancia(&vertices[destino]);
-                pq.Inserir(idVizinho, distPercorridaAtual, heuristica, portaisUsados+1);    // Como é um portal, o número de portais usados é incrementado.
-            } else {
-                if (visitados[idVizinho][portaisUsados]) { continue; }      // Ignora o vértice vizinho se ele já tiver sido visitado.
-                double distPercorridaAtual = distancia + pesoVizinho;
-                double heuristica = vertices[idVizinho].CalcularDistancia(&vertices[destino]);
-                pq.Inserir(idVizinho, distPercorridaAtual, heuristica, portaisUsados);
+
+                if (pq.posicoesVertices[idVizinho] == -1) {
+                    pq.Inserir(idVizinho, distPercorridaAtual, heuristica, portaisUsados);
+                } else {
+                    pq.atualizarChave(idVizinho, distPercorridaAtual, heuristica, portaisUsados);
+                }
             }
         }
     }

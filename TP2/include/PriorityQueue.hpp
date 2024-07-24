@@ -18,18 +18,25 @@ class PriorityQueue {
     public:
         PriorityQueue(int maxsize);
         ~PriorityQueue();
-        void Inserir(int vertice, double peso, int portais);    // Insere um nó no heap e organiza a estrutura, se necessário.
-        void Remover();                                         // Remove o primeiro nó do heap e organiza a estrutura.
-        pqNode* Topo();                                         // Retorna o primeiro nó do heap.
-        bool Vazio();                                           // Verifica se o heap está vazio.
+        void Inserir(int vertice, double peso, int portais);            // Insere um nó no heap e organiza a estrutura, se necessário.
+        void Remover();                                                 // Remove o primeiro nó do heap e organiza a estrutura.
+        void atualizarChave(int vertice, double peso, int portais);     // Atualiza o peso de um vértice para funcionamento eficiente dos algoritmos.
+        pqNode* Topo();                                                 // Retorna o primeiro nó do heap.
+        bool Vazio();                                                   // Verifica se o heap está vazio.
         void ImprimirTopo();
 
     private:
         int GetAncestral(int posicao);
         int GetSucessorEsq(int posicao);
         int GetSucessorDir(int posicao);
+        void heapifyUp(int pos);                                // Função do heapify para cima.
+        void heapifyDown(int pos);                              // Função do heapify para baixo.
         int tamanho;                        // Tamanho atual heap.
         pqNode* data;                       // Vetor de nós com as informações necessárias.
+        int* posicoesVertices;              // Guarda as posições dos vértices no heap para fácil acesso.
+
+        friend class GrafoLA;
+        friend class GrafoMA;
 };
 
 #endif

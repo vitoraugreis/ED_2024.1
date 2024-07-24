@@ -23,6 +23,7 @@ class AStarPriorityQueue {
         ~AStarPriorityQueue();
         void Inserir(int vertice, double distPercorrida, double heuristica, int portais);
         void Remover();
+        void atualizarChave(int vertice, double distPercorrida, double heuristica, int portais);
         AStarpqNode* Topo();
         bool Vazio();
         void ImprimirTopo();
@@ -31,8 +32,14 @@ class AStarPriorityQueue {
         int GetAncestral(int posicao);
         int GetSucessorEsq(int posicao);
         int GetSucessorDir(int posicao);
+        void heapifyUp(int pos);                                // Função do heapify para cima.
+        void heapifyDown(int pos);                              // Função do heapify para baixo.
         int tamanho;
         AStarpqNode* data;
+        int* posicoesVertices;              // Guarda as posições dos vértices no heap para fácil acesso.
+
+        friend class GrafoLA;
+        friend class GrafoMA;
 };
 
 #endif
