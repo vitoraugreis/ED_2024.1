@@ -1,96 +1,59 @@
 #include "listAdj.hpp"
 
 ListaAdjacencia::ListaAdjacencia() {
-    this->primeiro = new ListaEncadeada;
-    this->ultimo = this->primeiro;
+    this->lista = new ListaEncadeada[8];
     this->numVertices = 0;
+    this->limite = 8;
 }
 
 ListaAdjacencia::~ListaAdjacencia() {
-    this->Limpa();
-    delete this->primeiro;
+    delete[] this->lista;
 }
 
 void ListaAdjacencia::InsereVertice() {
-    ListaEncadeada* aux = new ListaEncadeada;
-    aux->id = this->numVertices;
-    this->ultimo->prox = aux;
-    this->ultimo = this->ultimo->prox;
     this->numVertices++;
+    if (numVertices == limite) { this->Redimensionar(); }
 }
 
 void ListaAdjacencia::InsereAresta(int inicio, int destino) {
-    ListaEncadeada* aux = this->primeiro->prox;
-    while (aux->id != inicio) {
-        aux = aux->prox;
-        if (aux == nullptr) { return; }
-    }
-    aux->InsereFinal(destino);
+    this->lista[inicio].InsereFinal(destino);
 }
 
 int ListaAdjacencia::TamanhoTotal() {
     int total = 0;
-    ListaEncadeada* aux = this->primeiro->prox;
-    while (aux != nullptr) {
-        total += aux->getTamanho();
-        aux = aux->prox;
-    }
-
+    for (int i = 0; i<this->numVertices; i++) { total += this->lista[i].getTamanho(); }
     return total;
 }
 
 int ListaAdjacencia::MenorLista() {
-    ListaEncadeada* aux = this->primeiro->prox;
-    int menor = aux->tamanho;
-    aux = aux->prox;
-
-    while (aux != nullptr) {
-        if (aux->tamanho < menor) { menor = aux->tamanho; }
-        aux = aux->prox;
+    int menor = this->lista[0].getTamanho();
+    for (int i = 1; i<this->numVertices; i++) {
+        if (this->lista[i].getTamanho() < menor) { menor = this->lista[i].getTamanho(); }
     }
 
     return menor;
 }
 
 int ListaAdjacencia::MaiorLista() {
-    ListaEncadeada* aux = this->primeiro->prox;
-    int maior = aux->tamanho;
-    aux = aux->prox;
-
-    while (aux != nullptr) {
-        if (aux->tamanho > maior) { maior = aux->tamanho; }
-        aux = aux->prox;
+    int maior = this->lista[0].getTamanho();
+    for (int i = 1; i<this->numVertices; i++) {
+        if (this->lista[i].getTamanho() > maior) { maior = this->lista[i].getTamanho(); }
     }
 
     return maior;
 }
 
-ListaEncadeada* ListaAdjacencia::Procurar(int x) {
-    ListaEncadeada* aux = this->primeiro->prox;
-    while (aux->id != x) {
-        aux = aux->prox;
-        if (aux == nullptr) { return nullptr; }
-    }
-    return aux;
+void ListaAdjacencia::ImprimeIndividual(int x) {
+    this->lista[x].Imprime();
 }
 
-void ListaAdjacencia::Imprime() {
-    ListaEncadeada* aux = this->primeiro->prox;
-    while (aux != nullptr) {
-        aux->Imprime();
-        aux = aux->prox;
+void ListaAdjacencia::Redimensionar() {
+    ListaEncadeada* nova = new ListaEncadeada[this->numVertices*2];
+    for (int i = 0; i<this->numVertices; i++) {
+        nova[i] = this->lista[i];
     }
-}
+    delete[] this->lista;
 
-void ListaAdjacencia::Limpa() {
-    ListaEncadeada* aux;
-    aux = this->primeiro->prox;
-
-    while (aux != nullptr) {
-        this->primeiro->prox = aux->prox;
-        delete aux;
-        aux = this->primeiro->prox;
-    }
-    this->ultimo = primeiro;
-    this->numVertices = 0;
+    this->lista = nova;
+    this->limite = this->numVertices * 2;
 }

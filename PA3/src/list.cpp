@@ -6,11 +6,9 @@ Celula::Celula() {
 }
 
 ListaEncadeada::ListaEncadeada() {
-    this->id = -1;
     this->primeiro = new Celula();
     this->ultimo = primeiro;
     this->tamanho = 0;
-    this->prox = nullptr;
 }
 
 ListaEncadeada::~ListaEncadeada() {

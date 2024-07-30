@@ -18,7 +18,4 @@ int Grafo::GrauMinimo() { return this->vertices.MenorLista(); }
 
 int Grafo::GrauMaximo() { return this->vertices.MaiorLista(); }
 
-void Grafo::ImprimeVizinhos(int v) {
-    ListaEncadeada* aux = this->vertices.Procurar(v);
-    aux->Imprime();
-}
+void Grafo::ImprimeVizinhos(int v) { this->vertices.ImprimeIndividual(v); }

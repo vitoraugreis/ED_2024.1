@@ -26,11 +26,9 @@ class ListaEncadeada {
 
 
     private:
-        int id;
         Celula* primeiro;
         Celula* ultimo;
         int tamanho;
-        ListaEncadeada* prox;
 
     friend class ListaAdjacencia;
 };

@@ -13,14 +13,13 @@ class ListaAdjacencia {
         int TamanhoTotal();
         int MenorLista();
         int MaiorLista();
-        ListaEncadeada* Procurar(int x);
-        void Imprime();
-        void Limpa();
+        void ImprimeIndividual(int x);
 
     private:
-        ListaEncadeada* primeiro;
-        ListaEncadeada* ultimo;
+        ListaEncadeada* lista;
+        int limite;
         int numVertices;
+        void Redimensionar();
 
     friend class Grafo;
 };
