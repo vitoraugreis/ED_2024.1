@@ -17,7 +17,7 @@ GrafoMA::GrafoMA(int numVertices) {
 
 // Destrutor do grafo.
 GrafoMA::~GrafoMA() {
-    for (int i = 0; i<numVertices; i++) {
+    for (int i = 0; i<numVertices; i++) { // Desaloca a memória utilizada pela matriz de adjacência.
         delete[] this->matrizAdj[i];
     }
     delete[] this->matrizAdj;
@@ -42,7 +42,7 @@ void GrafoMA::imprimirGrafo() {
 double GrafoMA::Dijkstra(int origem, int destino, int limitePortais) {
     int V = this->numVertices;
     double dist[V][limitePortais+1];        // Matriz com os vertices e a distância mínima percorrida de acordo com o número de portais usados.
-    PriorityQueue pq = PriorityQueue(V);
+    PriorityQueue pq = PriorityQueue(V * (limitePortais+1));
 
     for (int i = 0; i<V; i++) {
         for (int j = 0; j<=limitePortais; j++) {
@@ -56,7 +56,7 @@ double GrafoMA::Dijkstra(int origem, int destino, int limitePortais) {
     while (!pq.Vazio()) {
         pqNode* node = pq.Topo();           // Recupera o topo da lista de prioridade (Menor valor de peso)
         int id = node->vertice;          
-        double distancia = node->peso;
+        double distancia = node->distancia;
         int portais = node->portaisUsados;
         pq.Remover();                       // Remove o nó da lista de prioridade.
 
@@ -66,10 +66,10 @@ double GrafoMA::Dijkstra(int origem, int destino, int limitePortais) {
             double pesoVizinho = this->matrizAdj[id][j];
 
             if (pesoVizinho == INF) { continue; }   // Se o vizinho tiver valor na matriz de adjacência INF, ignorar (não é vizinho).
-            if (pesoVizinho == 0 && portais >= limitePortais) { continue; }     // Caso o número máximo de portais tiver sido atingido, ignorar este portal.
 
             double w = distancia + pesoVizinho;
             int novoPortal = (pesoVizinho == 0) ? portais+1 : portais;
+            if (novoPortal > limitePortais) { continue; }     // Ignora o vértice se ele for um portal e o limite de portais já for atingido.
 
             if (dist[j][novoPortal] > w) {
                 dist[j][novoPortal] = w;
@@ -98,7 +98,7 @@ double GrafoMA::AStar(int origem, int destino, Vertice* vertices, int limitePort
         }
     }
 
-    AStarPriorityQueue pq = AStarPriorityQueue(V);
+    AStarPriorityQueue pq = AStarPriorityQueue(V * (limitePortais+1));
     // A heuristica utilizada é a distância euclidiana do vértice atual até o vértice de destino.
     // A classe Vertice possui um método para fazer tal calculo.
     double heuristicaInicial = vertices[origem].CalcularDistancia(&vertices[destino]);
@@ -118,7 +118,7 @@ double GrafoMA::AStar(int origem, int destino, Vertice* vertices, int limitePort
             if (pesoVizinho == INF) { continue; }               // Se o valor na matriz for INF significa que não é vizinho.
 
             int novoPortal = (pesoVizinho == 0) ? portaisUsados+1 : portaisUsados;
-            if (novoPortal >= limitePortais) { continue; } // Ignora o vértice caso passe o limite de portais que podem ser utilizados.
+            if (novoPortal > limitePortais) { continue; } // Ignora o vértice caso passe o limite de portais que podem ser utilizados.
 
             if (!visitados[j][novoPortal]) {
                 visitados[j][novoPortal] = true;

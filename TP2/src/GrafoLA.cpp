@@ -9,7 +9,9 @@ GrafoLA::GrafoLA(int numVertices) {
 // Destrutor do Grafo.
 GrafoLA::~GrafoLA() {
     for (int i = 0; i < numVertices; ++i) {
-        No* atual = listaAdj[i].head;
+        No* atual = listaAdj[i].head;           // Começa a desalocar a lista a partir do primeiro nó.
+
+        // Desaloca a memória ocupada pela lista inteira.
         while (atual != nullptr) {
             No* prox = atual->prox;
             delete atual;
@@ -20,8 +22,8 @@ GrafoLA::~GrafoLA() {
 }
 
 // Adiciona aresta no grafo.
-void GrafoLA::adicionarAresta(int origme, int destino, double peso) {
-    listaAdj[origme].adicionarAresta(destino, peso);
+void GrafoLA::adicionarAresta(int origem, int destino, double peso) {
+    listaAdj[origem].adicionarAresta(destino, peso);
 }
 
 // Mostra o grafo no console. (usado no ínicio para conferir a construção do grafo)
@@ -36,8 +38,8 @@ void GrafoLA::imprimirGrafo() {
 // Algoritmo Dijkstra.
 double GrafoLA::Dijkstra(int origem, int destino, int limitePortais) {
     int V = this->numVertices;
-    double dist[V][limitePortais+1];        // Matriz com os vertices e a distância mínima percorrida de acordo com o número de portais usados.
-    PriorityQueue pq = PriorityQueue(V);    // Fila de prioridade. Usada para escolher os caminhos com menor distância.
+    double dist[V][limitePortais+1];                            // Matriz com os vertices e a distância mínima percorrida de acordo com o número de portais usados.
+    PriorityQueue pq = PriorityQueue(V * (limitePortais+1));    // Fila de prioridade. Usada para escolher os caminhos com menor distância.
 
     for (int i = 0; i<V; i++) {
         for (int j = 0; j<=limitePortais; j++) {
@@ -51,7 +53,7 @@ double GrafoLA::Dijkstra(int origem, int destino, int limitePortais) {
     while (!pq.Vazio()) {
         pqNode* node = pq.Topo();           // Recupera o topo da lista de prioridade (Menor valor de distância percorrida)
         int id = node->vertice;          
-        double distancia = node->peso;
+        double distancia = node->distancia;
         int portais = node->portaisUsados;
         pq.Remover();                 
 
@@ -89,7 +91,7 @@ double GrafoLA::AStar(int origem, int destino, Vertice* vertices, int limitePort
         }
     }
 
-    AStarPriorityQueue pq = AStarPriorityQueue(V); 
+    AStarPriorityQueue pq = AStarPriorityQueue(V * (limitePortais+1)); 
     // A heuristica utilizada é a distância euclidiana do vértice atual até o vértice de destino.
     // A classe Vertice possui um método para fazer tal calculo.
     double heuristicaInicial = vertices[origem].CalcularDistancia(&vertices[destino]);
@@ -108,8 +110,9 @@ double GrafoLA::AStar(int origem, int destino, Vertice* vertices, int limitePort
             int idVizinho = j->destino;
             double pesoVizinho = j->peso;
             int novoPortal = (pesoVizinho == 0) ? portaisUsados+1 : portaisUsados;
-            if (novoPortal > limitePortais) { continue; } // Ignora o vértice caso passe o limite de portais que podem ser utilizados.
+            if (novoPortal > limitePortais) { continue; }       // Ignora o vértice caso passe o limite de portais que podem ser utilizados.
 
+            // Se o vértice não foi visitado, insere um novo ou atualiza a lista de prioridade
             if (!visitados[idVizinho][novoPortal]) {
                 visitados[idVizinho][novoPortal] = true;
                 double distPercorridaAtual = distancia + pesoVizinho;

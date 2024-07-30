@@ -21,10 +21,10 @@ class AStarPriorityQueue {
     public:
         AStarPriorityQueue(int maxsize);
         ~AStarPriorityQueue();
-        void Inserir(int vertice, double distPercorrida, double heuristica, int portais);
-        void Remover();
-        void atualizarChave(int vertice, double distPercorrida, double heuristica, int portais);
-        AStarpqNode* Topo();
+        void Inserir(int vertice, double distPercorrida, double heuristica, int portais);           // Insere um nó na fila.
+        void Remover();                                                                             // Remove primeiro elemento da fila.
+        void atualizarChave(int vertice, double distPercorrida, double heuristica, int portais);    // Atualiza um elemento presente na lista.
+        AStarpqNode* Topo();                                                                        // Retorna o topo da lista.
         bool Vazio();
         void ImprimirTopo();
 

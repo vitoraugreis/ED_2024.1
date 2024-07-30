@@ -21,8 +21,8 @@ AStarpqNode::AStarpqNode(int vertice, double distPercorrida, double heuristica, 
 // Inicia o minHeap.
 AStarPriorityQueue::AStarPriorityQueue(int maxsize) {
     this->tamanho = 0;
-    this->data = new AStarpqNode[maxsize];
-    this->posicoesVertices = new int[maxsize];
+    this->data = new AStarpqNode[maxsize];      // Heap com tamanho informado.
+    this->posicoesVertices = new int[maxsize];  // Inicia o vetor com o mesmo tamanho, para armazenar as posições.
 
     for (int i = 0; i<maxsize; i++) { posicoesVertices[i] = -1; }   // Indica que o vértice não foi adicionado no heap.
 }
@@ -53,8 +53,10 @@ void AStarPriorityQueue::Remover() {
 
 // Função de atualizar o peso do vértice, caso necessário.
 void AStarPriorityQueue::atualizarChave(int vertice, double distPercorrida, double heuristica, int portais) {
-    int pos = this->posicoesVertices[vertice];
-    this->data[pos].distPercorrida = distPercorrida;
+    int pos = this->posicoesVertices[vertice];          // Obrtem a posição no heap do vertice informado.
+
+    // Atualiza as informações e faz o heapify com o nó atualizado. Para cima, pois o valor atualizado deve ser menor que o existente anteriormente.
+    this->data[pos].distPercorrida = distPercorrida;    
     this->data[pos].heuristica = heuristica;
     this->data[pos].portaisUsados = portais;
     heapifyUp(pos);
@@ -139,6 +141,7 @@ int AStarPriorityQueue::GetSucessorEsq(int posicao) {
     if (sucEsq >= this->tamanho) { return posicao; }
     else { return sucEsq; }
 }
+
 // Retorna a posição do sucessor da direita do nó que está em determinada posição.
 int AStarPriorityQueue::GetSucessorDir(int posicao) {
     int sucDir = 2*posicao+2;

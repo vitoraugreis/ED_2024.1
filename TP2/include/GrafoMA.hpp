@@ -13,9 +13,9 @@ class GrafoMA {
         GrafoMA(int numVertices);
         ~GrafoMA();
         void adicionarAresta(int origem, int destino, double peso);
-        void imprimirGrafo();
-        double Dijkstra(int origem, int destino, int limitePortais);
-        double AStar(int origem, int destino, Vertice* vertices, int limitePortais);
+        void imprimirGrafo();               
+        double Dijkstra(int origem, int destino, int limitePortais);                    // Dijkstra
+        double AStar(int origem, int destino, Vertice* vertices, int limitePortais);    // Algoritmo A*
     private:
         int numVertices;            // Número de vértices do grafo.
         double** matrizAdj;         // Matriz de adjacência do grafo. Suas posições são os pesos das arestas i -> j.

@@ -2,14 +2,14 @@
 
 // Inicialização sem parâmetro. Apenas para inicializar o minHeap.
 pqNode::pqNode() {
-    this->peso = -1;
+    this->distancia = -1;
     this->vertice = -1;
 }
 
 // Construtor do nó com parâmetros.
-pqNode::pqNode(int vertice, double peso, int portais) {
+pqNode::pqNode(int vertice, double distancia, int portais) {
     this->vertice = vertice;
-    this->peso = peso;
+    this->distancia = distancia;
     this->portaisUsados = portais;
 }
 
@@ -26,8 +26,8 @@ PriorityQueue::PriorityQueue(int maxsize) {
 PriorityQueue::~PriorityQueue() { delete[] this->data; delete[] this->posicoesVertices; }
 
 // Insere um novo nó no heap
-void PriorityQueue::Inserir(int vertice, double peso, int portais) {
-    pqNode novo = pqNode(vertice, peso, portais);       // Cria o nó
+void PriorityQueue::Inserir(int vertice, double distancia, int portais) {
+    pqNode novo = pqNode(vertice, distancia, portais);       // Cria o nó
     this->data[this->tamanho] = novo;                   // Insere o nó no fnal do vetor.
     this->posicoesVertices[vertice] = this->tamanho;    // Atualiza a posição do vértice no vetor de posições.
 
@@ -48,10 +48,10 @@ void PriorityQueue::Remover() {
     heapifyDown(0);                                         // Faz o heapify para baixo.
 }
 
-// Função de atualizar o peso do vértice, caso necessário.
-void PriorityQueue::atualizarChave(int vertice, double peso, int portaisUsados) {
+// Função de atualizar a distancia do vértice, caso necessário.
+void PriorityQueue::atualizarChave(int vertice, double distancia, int portaisUsados) {
     int pos = this->posicoesVertices[vertice];
-    this->data[pos].peso = peso;
+    this->data[pos].distancia = distancia;
     this->data[pos].portaisUsados = portaisUsados;
     heapifyUp(pos);
 }
@@ -62,12 +62,12 @@ void PriorityQueue::heapifyDown(int pos) {
     int sucDir = this->GetSucessorDir(pos);
     int menorSucessor;
     // É feita uma comparação para saber qual é o nó sucessor com menor valor. Este será usado para manter a propriedade do minHeap.
-    if (this->data[sucEsq].peso <= this->data[sucDir].peso) { menorSucessor = sucEsq; }
+    if (this->data[sucEsq].distancia <= this->data[sucDir].distancia) { menorSucessor = sucEsq; }
     else { menorSucessor = sucDir; }
 
     // Enquanto o nó que foi colocado para substituir a raiz for maior que os seus sucessore, ele descerá na estrutura até achar sua posição.
     // Consequentemente, a primeira posição da estrutura será assumida pelo nó com menor valor de todo o minHeap.
-    while (this->data[pos].peso > this->data[menorSucessor].peso) {
+    while (this->data[pos].distancia > this->data[menorSucessor].distancia) {
         int vMenorSuc = this->data[menorSucessor].vertice;
         int vFilho = this->data[pos].vertice;
 
@@ -84,7 +84,7 @@ void PriorityQueue::heapifyDown(int pos) {
         pos = menorSucessor;
         sucEsq = this->GetSucessorEsq(pos);
         sucDir = this->GetSucessorDir(pos);
-        if (this->data[sucEsq].peso <= this->data[sucDir].peso) { menorSucessor = sucEsq; }
+        if (this->data[sucEsq].distancia <= this->data[sucDir].distancia) { menorSucessor = sucEsq; }
         else { menorSucessor = sucDir; }
     }
 }
@@ -94,7 +94,7 @@ void PriorityQueue::heapifyUp(int pos) {
     int pai = this->GetAncestral(pos);
     
     // Enquanto a estimativa do filho for menor que a de seu nó pai, o filho subirá na estrutura (assumirá posições menores no vetor).
-    while (this->data[pos].peso < this->data[pai].peso) {
+    while (this->data[pos].distancia < this->data[pai].distancia) {
         int vPai = this->data[pai].vertice;
         int vFilho = this->data[pos].vertice;
 
@@ -145,5 +145,5 @@ int PriorityQueue::GetSucessorDir(int posicao) {
 
 void PriorityQueue::ImprimirTopo() {
     pqNode* no = this->Topo();
-    std::cout << no->vertice << ' ' << no->peso << ' ' << no->portaisUsados << std::endl;
+    std::cout << no->vertice << ' ' << no->distancia << ' ' << no->portaisUsados << std::endl;
 }

@@ -9,7 +9,7 @@ class pqNode {
         pqNode();               // Construtor sem parâmetros. Utilizado para inicar a fila de prioridade.
         pqNode(int vertice, double peso, int portais);  // Construtor com parâmetros.
         int vertice;            // Vértice atual.
-        double peso;            // Distância percorrida até chegar ao vértice. Será usada para ordenar a fila de prioridade.
+        double distancia;       // Distância percorrida até chegar ao vértice. Será usada para ordenar a fila de prioridade.
         int portaisUsados;      // Número de portais usados até a chegada neste vértice.
 };
 
@@ -18,11 +18,11 @@ class PriorityQueue {
     public:
         PriorityQueue(int maxsize);
         ~PriorityQueue();
-        void Inserir(int vertice, double peso, int portais);            // Insere um nó no heap e organiza a estrutura, se necessário.
-        void Remover();                                                 // Remove o primeiro nó do heap e organiza a estrutura.
-        void atualizarChave(int vertice, double peso, int portais);     // Atualiza o peso de um vértice para funcionamento eficiente dos algoritmos.
-        pqNode* Topo();                                                 // Retorna o primeiro nó do heap.
-        bool Vazio();                                                   // Verifica se o heap está vazio.
+        void Inserir(int vertice, double distancia, int portais);           // Insere um nó no heap e organiza a estrutura, se necessário.
+        void Remover();                                                     // Remove o primeiro nó do heap e organiza a estrutura.
+        void atualizarChave(int vertice, double distancia, int portais);    // Atualiza a distancia de um vértice para funcionamento eficiente dos algoritmos.
+        pqNode* Topo();                                                     // Retorna o primeiro nó do heap.
+        bool Vazio();                                                       // Verifica se o heap está vazio.
         void ImprimirTopo();
 
     private:
